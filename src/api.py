@@ -67,5 +67,24 @@ def get_hero(id):
         'players': players
     })
 
+@app.route('/player/<int:id>', methods=['GET'])
+def get_player(id):
+    player = [p for p in recommender.data['players'] if p['id'] == id][0]
+    heroes = get_heroes_summary(player['vector'], None)
+    return jsonify({
+        'id': id,
+        'name': player['name'],
+        'twitch': player['twitch'],
+        'heroes': heroes
+    })
+
+@app.route('/recommend/<int:id>', methods=['GET'])
+def get_recommendations(id):
+    players = recommender.recommend_players(id)
+    return jsonify([
+        {'id': p['id'], 'name': p['name'], 'twitch': p['twitch'], 'heroes': get_heroes_summary(p['vector'])}
+        for p in players
+    ])
+
 if __name__ == '__main__':
     app.run(debug=True)
