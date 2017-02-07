@@ -47,8 +47,6 @@
         }
       }(window.location))
     </script>
-    <script src="/dota2-twitch-recommender/js/kewlrouter.js"></script>
-    <script src="/dota2-twitch-recommender/js/app.js"></script>
     <!-- End Single Page Apps for GitHub Pages -->
 </head>
 
@@ -60,18 +58,18 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="#">
+                    <a href="/" onclick="router.navigate(event)">
                         Dota 2 Twitch
                     </a>
                 </li>
                 <li>
-                    <a href="/dota2-twitch-recommender/recommend">Recommender</a>
+                    <a href="recommend" onclick="router.navigate(event)">Recommender</a>
                 </li>
                 <li>
-                    <a href="/dota2-twitch-recommender/players">Players</a>
+                    <a href="players" onclick="router.navigate(event)">Players</a>
                 </li>
                 <li>
-                    <a href="/dota2-twitch-recommender/heroes">Heroes</a>
+                    <a href="heroes" onclick="router.navigate(event)">Heroes</a>
                 </li>
                 <li>
                     <a href="https://github.com/nims11/dota2-twitch-recommender">Github</a>
@@ -83,20 +81,21 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <div class="row" id="recommender">
+                <div class="row hidden" id="recommend">
                     <div class="col-lg-12">
-                        <h1>Twitch Stream Recommender</h1>
+                        <h2>Dota 2 Twitch Stream Recommender</h2>
                     </div>
                 </div>
-                <div class="row" id="players">
+                <div class="row hidden" id="players">
                     <div class="col-lg-12">
-                        <h1>Players</h1>
+                        <h2>Players</h2>
                         <p>List of players used in the recommender</p>
                     </div>
                 </div>
-                <div class="row" id="heroes">
+                <div class="row hidden" id="heroes">
                     <div class="col-lg-12">
-                        <h1>Heroes</h1>
+                        <h2>Heroes</h2>
+                        <p>List of heroes used in the recommender</p>
                     </div>
                 </div>
             </div>
@@ -107,10 +106,10 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="/dota2-twitch-recommender/js/jquery.js"></script>
+    <script src="js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="/dota2-twitch-recommender/js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
     <!-- Menu Toggle Script -->
     <script>
@@ -119,6 +118,8 @@
         $("#wrapper").toggleClass("toggled");
     });
     </script>
+    <script src="js/kewlrouter.js"></script>
+    <script src="js/app.js"></script>
 
 </body>
 
