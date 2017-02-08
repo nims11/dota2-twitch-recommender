@@ -37,7 +37,7 @@ def populate_players(dim):
                 'twitch': twitch,
                 'vector': get_hero_vector(_id, dim)
             })
-            # time.sleep(1)
+            time.sleep(1)
     return players
 
 def populate_data():
