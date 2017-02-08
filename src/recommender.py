@@ -32,4 +32,4 @@ def recommend_players(id, k=10):
     return [data['players'][idx] for idx in player_space.kneighbors([vector], k=k)[0]]
 
 data = populate_data()
-player_space = create_player_space(data['players'])
+player_space = create_player_space(data['players'], separators=(',', ':'))
