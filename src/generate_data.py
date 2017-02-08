@@ -5,7 +5,7 @@ import time
 
 def populate_heroes():
     heroes = []
-    heroes_api_response = requests.get('http://localhost:8000/api.opendota.com/api/heroes').json()
+    heroes_api_response = requests.get('http://api.opendota.com/api/heroes').json()
     for hero in heroes_api_response:
         id = hero['id']
         name = hero['localized_name']
@@ -15,7 +15,7 @@ def populate_heroes():
     return heroes
 
 def get_hero_vector(id, dim):
-    match_history = requests.get('http://localhost:8000/api.opendota.com/api/players/%s/matches' % str(id), params={'limit': 500}).json()
+    match_history = requests.get('http://api.opendota.com/api/players/%s/matches' % str(id), params={'limit': 500}).json()
     vector = [0] * dim
     for x in match_history:
         vector[x['hero_id']] += 1
