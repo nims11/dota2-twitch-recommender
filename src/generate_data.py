@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import os
 import requests
 from tqdm import tqdm
 import time
@@ -22,7 +23,7 @@ def get_hero_vector(id, dim):
     return vector
 
 def populate_players(dim):
-    player_list = 'players.csv'
+    player_list = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'players.csv')
     players = []
     with open(player_list) as f:
         for line in tqdm(f):
