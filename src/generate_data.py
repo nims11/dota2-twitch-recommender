@@ -3,6 +3,7 @@ import os
 import requests
 import time
 import logging
+import json
 
 def populate_heroes():
     logging.info("Populating Heroes...")
@@ -48,3 +49,8 @@ def populate_data():
         'heroes': heroes,
         'players': populate_players(len(heroes))
     }
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    with open('data.json', 'w') as f:
+        f.write(json.dumps(populate_data()))
