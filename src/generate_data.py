@@ -1,10 +1,11 @@
 #!/usr/bin/python
 import os
 import requests
-from tqdm import tqdm
 import time
+import logging
 
 def populate_heroes():
+    logging.info("Populating Heroes...")
     heroes = []
     heroes_api_response = requests.get('http://api.opendota.com/api/heroes').json()
     for hero in heroes_api_response:
@@ -16,6 +17,7 @@ def populate_heroes():
     return heroes
 
 def get_hero_vector(id, dim):
+    logging.info("constructing hero vector for player: " + str(id))
     match_history = requests.get('http://api.opendota.com/api/players/%s/matches' % str(id), params={'limit': 500}).json()
     vector = [0] * dim
     for x in match_history:
@@ -26,7 +28,7 @@ def populate_players(dim):
     player_list = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'players.csv')
     players = []
     with open(player_list) as f:
-        for line in tqdm(f):
+        for line in f:
             nick, _, twitch, dotabuff = line.strip().split(',')
             if dotabuff == '-' or twitch == '-':
                 continue

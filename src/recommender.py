@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import logging
 import numpy as np
 import requests
 from collections import defaultdict
@@ -26,6 +27,7 @@ def create_player_space(players):
     return neigh
 
 def recommend_players(id, k=10):
+    logging.info("recommending for player: " + str(id))
     vector = get_hero_vector(id, len(data['heroes']))
     return [data['players'][idx] for idx in player_space.kneighbors([vector], k=k)[0]]
 
