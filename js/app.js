@@ -105,7 +105,7 @@ function populate_populars(){
     }
     rows.sort(function(x, y){return x[0].localeCompare(y[0]);});
     rows = rows.map(function(x){return x[1]});
-    $('#players-table').append(rows.join(""));
+    $('#players-table').append('<tbody>'+rows.join("")+'</tbody>');
 
     // popular players for a hero
     hero_to_player_popular = {};
@@ -130,7 +130,7 @@ function populate_populars(){
     }
     rows.sort(function(x, y){return x[0].localeCompare(y[0]);});
     rows = rows.map(function(x){return x[1]});
-    $('#heroes-table').append(rows.join(""));
+    $('#heroes-table').append('<tbody>'+rows.join("")+'</tbody>');
 }
 
 function hide_all(){
@@ -148,11 +148,36 @@ function render_recommend(id){
     hide_all();
     $('#recommend').removeClass("hidden");
 }
-function render_hero(id){
-
+function render_hero(url_arr){
+    hide_all();
+    var hid = url_arr[url_arr.length-2];
+    $('#single-hero-table tbody').remove();
+    $('#single-hero .name').text("Hero: " + data['heroes'][hid]);
+    var rows = [];
+    for(var idx in hero_to_player_popular[hid]){
+        var pid = hero_to_player_popular[hid][idx][0];
+        var cnt = hero_to_player_popular[hid][idx][1];
+        if(cnt > 0)
+            rows.push('<tr><td>'+linkify_player(pid)+'</td><td>'+cnt+'</td></tr>');
+    }
+    $('#single-hero-table').append('<tbody>'+rows.join("")+'</tbody>');
+    $('#single-hero').removeClass("hidden");
 }
-function render_player(id){
-
+function render_player(url_arr){
+    hide_all();
+    var pid = url_arr[url_arr.length-2];
+    $('#single-player-table tbody').remove();
+    $('#single-player .name').text("Player: " + data['players'][pid].name);
+    $('#single-player .twitch').html(linkify_twitch(data['players'][pid].twitch));
+    var rows = [];
+    for(var idx in player_to_hero_popular[pid]){
+        var hid = player_to_hero_popular[pid][idx][0];
+        var cnt = player_to_hero_popular[pid][idx][1];
+        if(cnt > 0)
+            rows.push('<tr><td>'+linkify_hero(hid)+'</td><td>'+cnt+'</td></tr>');
+    }
+    $('#single-player-table').append('<tbody>'+rows.join("")+'</tbody>');
+    $('#single-player').removeClass("hidden");
 }
 
 var routes = {

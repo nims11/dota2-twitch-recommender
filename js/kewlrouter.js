@@ -30,7 +30,7 @@ function parse_handler(handler){
 }
 
 function KewlRouter(handler){
-    this.root = '';
+    this.root = '/';
     this.handler = parse_handler(handler);
     this.render = function(){
         var pathname = window.location.pathname;
@@ -54,7 +54,8 @@ function KewlRouter(handler){
             return false;
     }
     this.navigate = function(e){
-        var target = e.target.href;
+        var target = e.target.attributes["href"].value;
+        console.log(this.root+target);
         history.pushState(null, null, this.root + target);
         this.render();
         e.preventDefault();

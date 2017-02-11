@@ -83,7 +83,7 @@
             <div class="container-fluid">
                 <div class="row hidden" id="recommend">
                     <div class="col-lg-12">
-                        <h2>Dota 2 Twitch Stream Recommender</h2>
+                        <h2>Dota 2 Twitch Recommender</h2>
                     </div>
                 </div>
                 <div class="row hidden" id="players">
@@ -91,11 +91,27 @@
                         <h2>Players</h2>
                         <p>List of players used in the recommender</p>
                         <table class="table table-bordered" id="players-table">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Twitch</th>
+                                    <th>Heroes (last 500 games)</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="row hidden" id="single-player">
+                    <div class="col-lg-12">
+                        <h2 class="name"></h2>
+                        <p class="twitch"></p>
+                        <table class="table table-bordered" id="single-player-table">
+                            <thead>
                             <tr>
-                                <th>Player</th>
-                                <th>Twitch</th>
-                                <th>Heroes (last 500 games)</th>
+                                <th>Hero</th>
+                                <th># (last 500 games)</th>
                             </tr>
+                            </thead>
                         </table>
                     </div>
                 </div>
@@ -104,10 +120,25 @@
                         <h2>Heroes</h2>
                         <p>List of heroes used in the recommender</p>
                         <table class="table table-bordered" id="heroes-table">
+                            <thead>
                             <tr>
                                 <th>Hero</th>
                                 <th>Players (last 500 games)</th>
                             </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="row hidden" id="single-hero">
+                    <div class="col-lg-12">
+                        <h2 class="name"></h2>
+                        <table class="table table-bordered" id="single-hero-table">
+                            <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th># (last 500 games)</th>
+                            </tr>
+                            </thead>
                         </table>
                     </div>
                 </div>
