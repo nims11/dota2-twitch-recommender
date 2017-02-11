@@ -64,9 +64,9 @@ function debug_player(vector){
     }
 }
 
-function kneighbors(pid, k){
+function kneighbors(vector, k){
     k = k || 10;
-    var vector = norm_vector(get_hero_vector(pid));
+    vector = norm_vector(vector);
     var scores = [];
     for(var pid in data['players']){
         scores.push([
@@ -78,12 +78,7 @@ function kneighbors(pid, k){
         );
     }
     scores.sort(function(x, y){return y[1]-x[1]});
-    var kneigh = scores.splice(0, k);
-    debug_player(vector);
-    for(var x = 0; x < k;x++){
-        debug_player(data['players'][kneigh[x][0]].vector);
-    }
-    return kneigh;
+    return scores.splice(0, k);
 }
 
 function linkify_twitch(x){
@@ -205,17 +200,23 @@ function render_player(url_arr){
 function render_recommend_pid(url_arr){
     $('#recommend button').removeClass("btn-primary").addClass("btn-info").text("Fetching data and computing...")
     $('#reco-result-table tbody').remove();
+
     var pid = url_arr[url_arr.length-2];
-    var results = kneighbors(pid, 15);
+    var vector = get_hero_vector(pid);
+    var results = kneighbors(vector, 15);
     var rows = []
     for(var idx in results){
         var pid_2 = results[idx][0];
         var cnt = results[idx][1];
-        var summary = player_to_hero_popular[pid_2].slice(0, 5).map(
-            function(x){return linkify_hero(x[0]) + " (x"+x[1]+")";}
-        ).join(", ");
+        var summary = data['players'][pid_2].vector
+            .map(function(x, idx){return [idx, x*vector[idx]];})
+            .sort(function(x, y){return y[1] - x[1];})
+            .slice(0, 5)
+            .map(function(x){return linkify_hero(x[0]) + " (x"+data['players'][pid_2].vector[x[0]]+")";})
+            .join(", ");
         rows.push('<tr><td>'+linkify_player(pid_2)+'</td><td>'+linkify_twitch(pid_2)+'</td><td>'+summary+'</td></tr>');
     }
+
     $('#reco-result-table').append('<tbody>'+rows.join("")+'</tbody>');
     $('#reco-result .name').text(get_player_name(pid));
     hide_all();
