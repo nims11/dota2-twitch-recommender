@@ -83,7 +83,7 @@ function kneighbors(vector, k){
 
 function linkify_twitch(x){
     var url = data['players'][x].twitch;
-    return '<a href="'+url+'">'+url+"</a>";
+    return '<a target="_new" href="'+url+'">'+url+"</a>";
 }
 
 function linkify_player(pid){
