@@ -210,6 +210,7 @@ function render_recommend_pid(url_arr){
         var cnt = results[idx][1];
         var summary = data['players'][pid_2].vector
             .map(function(x, idx){return [idx, x*vector[idx]];})
+            .filter(function(x){return data['players'][pid_2].vector[x[0]] >= 5 && vector[x[0]] >= 5;})
             .sort(function(x, y){return y[1] - x[1];})
             .slice(0, 5)
             .map(function(x){return linkify_hero(x[0]) + " (x"+data['players'][pid_2].vector[x[0]]+")";})
