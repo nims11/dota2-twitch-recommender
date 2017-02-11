@@ -252,3 +252,9 @@ $('#recommend-btn').click(function(){
     pid = pid[pid.length-1];
     router._navigate('recommend/'+pid);
 });
+
+$("#input-reco").keyup(function(event){
+    if(event.keyCode == 13){
+        $("#recommend-btn").click();
+    }
+});
