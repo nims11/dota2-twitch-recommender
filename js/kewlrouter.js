@@ -44,10 +44,15 @@ function KewlRouter(handler, root){
     this.root = root || '/';
     this.root_arr = parse_url(root);
     this.handler = parse_handler(handler);
+    this.cur_path = function(){
+        return get_relative_path(parse_url(window.location.pathname, false), this.root_arr);
+    }
     this.render = function(){
-        var pathname = window.location.pathname;
         var cur_handler = this.handler;
-        var url_arr = get_relative_path(parse_url(pathname, false), this.root_arr);
+        var url_arr = this.cur_path();
+        if(url_arr == null)
+            return false;
+
         for(var i = 0; i < url_arr.length; i++){
             var found = false;
             for(var key in cur_handler){
@@ -74,8 +79,21 @@ function KewlRouter(handler, root){
         e.preventDefault();
         this._navigate(target);
     }
+
+    this.monitor = function(){
+        var cur = null;
+        var self = this;
+        setInterval(function(){
+            var new_path = self.cur_path().join();
+            if(cur !== new_path){
+                cur = new_path;
+                self.render();
+            }
+        }, 50);
+    }
 }
 
 function initialize_router(handler, root){
     router = new KewlRouter(handler, root);
+    router.monitor();
 }
