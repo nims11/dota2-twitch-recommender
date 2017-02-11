@@ -34,6 +34,19 @@ function get_hero_vector(player_id){
     return vector;
 }
 
+function get_player_name(pid){
+    var name = null;
+    $.ajax({
+        url: 'http://api.opendota.com/api/players/'+pid,
+        dataType: 'json',
+        async: false,
+        success: function(data) {
+            name = data['profile']['personaname']
+        }
+    });
+    return name;
+}
+
 function debug_player(vector){
     var heroes = vector.map(function(x, idx){return [x, idx]});
     heroes.sort(function(x, y){return y[0] - x[0]});
@@ -67,7 +80,8 @@ function kneighbors(pid, k){
 }
 
 function linkify_twitch(x){
-    return '<a href="'+x+'">'+x+"</a>";
+    var url = data['players'][x].twitch;
+    return '<a href="'+url+'">'+url+"</a>";
 }
 
 function linkify_player(pid){
@@ -100,7 +114,7 @@ function populate_populars(){
             function(x){return linkify_hero(x[0]) + " (x"+x[1]+")";}
         ).join(", ");
         var name = data['players'][pid].name;
-        var twitch = linkify_twitch(data['players'][pid].twitch);
+        var twitch = linkify_twitch(pid);
         rows.push([name, "<tr><td>"+linkify_player(pid)+"</td><td>"+twitch+"</td><td>"+summary+"</td></tr>"])
     }
     rows.sort(function(x, y){return x[0].localeCompare(y[0]);});
@@ -134,7 +148,7 @@ function populate_populars(){
 }
 
 function hide_all(){
-    $('.container-fluid .row').addClass("hidden");
+    $('.container-fluid>.row').addClass("hidden");
 }
 function render_players(){
     hide_all();
@@ -168,7 +182,7 @@ function render_player(url_arr){
     var pid = url_arr[url_arr.length-2];
     $('#single-player-table tbody').remove();
     $('#single-player .name').text("Player: " + data['players'][pid].name);
-    $('#single-player .twitch').html(linkify_twitch(data['players'][pid].twitch));
+    $('#single-player .twitch').html(linkify_twitch(pid));
     var rows = [];
     for(var idx in player_to_hero_popular[pid]){
         var hid = player_to_hero_popular[pid][idx][0];
@@ -180,6 +194,24 @@ function render_player(url_arr){
     $('#single-player').removeClass("hidden");
 }
 
+function render_recommend_pid(url_arr){
+    hide_all();
+    var pid = url_arr[url_arr.length-2];
+    var results = kneighbors(pid, 15);
+    var rows = []
+    for(var idx in results){
+        var pid_2 = results[idx][0];
+        var cnt = results[idx][1];
+        var summary = player_to_hero_popular[pid_2].slice(0, 5).map(
+            function(x){return linkify_hero(x[0]) + " (x"+x[1]+")";}
+        ).join(", ");
+        rows.push('<tr><td>'+linkify_player(pid_2)+'</td><td>'+linkify_twitch(pid_2)+'</td><td>'+summary+'</td></tr>');
+    }
+    $('#reco-result-table').append('<tbody>'+rows.join("")+'</tbody>');
+    $('#reco-result .name').text(get_player_name(pid));
+    $('#reco-result').removeClass("hidden");
+}
+
 var routes = {
     '/': render_recommend,
     '/players': render_players,
@@ -187,19 +219,24 @@ var routes = {
     '/players/.*': render_player,
     '/heroes/.*': render_hero,
     '/recommend': render_recommend,
-    '/recommend/.*': render_recommend
+    '/recommend/.*': render_recommend_pid
 }
+var root = '/dota2-twitch-recommender/';
 $.ajax({
-    url: '/data.json',
+    url: root + 'data.json',
     dataType: 'json',
-    async: false,
     success: function(json){
         console.log("Data Fetched...")
         data = json;
         populate_player_space();
         populate_populars();
-        initialize_router(routes)
+        initialize_router(routes, root)
         router.render()
     }
 });
 
+$('#recommend-btn').click(function(){
+    var pid = $('#input-reco').val().split('/').filter(function(x){return x.length > 0;});
+    pid = pid[pid.length-1];
+    router._navigate('recommend/'+pid);
+});

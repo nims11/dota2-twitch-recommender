@@ -58,7 +58,7 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="/" onclick="router.navigate(event)">
+                    <a href="" onclick="router.navigate(event)">
                         Dota 2 Twitch
                     </a>
                 </li>
@@ -85,6 +85,32 @@
                     <div class="col-lg-12">
                         <h2>Dota 2 Twitch Recommender</h2>
                     </div>
+                    <div class="row" style="margin-top: 200px">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" style="text-align:center" id="input-reco"
+                            class="form-control" placeholder="Enter Dota2 id or Dotabuff profile url...">
+                            <button id="recommend-btn" style="width:100%" class="btn btn-primary">Recommend!</button>
+                        </div>
+                        <div class="col-lg-3">
+                        </div>
+                    </div>
+                </div>
+                <div class="row hidden" id="reco-result">
+                    <div class="col-lg-12">
+                        <h2 class="name"></h2>
+                        <p>List of players with similar hero pool as yours (last 500 games)</p>
+                        <table class="table table-bordered" id="reco-result-table">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Twitch</th>
+                                    <th>Common Heroes (last 500 games)</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
                 <div class="row hidden" id="players">
                     <div class="col-lg-12">
@@ -107,10 +133,10 @@
                         <p class="twitch"></p>
                         <table class="table table-bordered" id="single-player-table">
                             <thead>
-                            <tr>
-                                <th>Hero</th>
-                                <th># (last 500 games)</th>
-                            </tr>
+                                <tr>
+                                    <th>Hero</th>
+                                    <th># (last 500 games)</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -121,10 +147,10 @@
                         <p>List of heroes used in the recommender</p>
                         <table class="table table-bordered" id="heroes-table">
                             <thead>
-                            <tr>
-                                <th>Hero</th>
-                                <th>Players (last 500 games)</th>
-                            </tr>
+                                <tr>
+                                    <th>Hero</th>
+                                    <th>Players (last 500 games)</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -134,10 +160,10 @@
                         <h2 class="name"></h2>
                         <table class="table table-bordered" id="single-hero-table">
                             <thead>
-                            <tr>
-                                <th>Player</th>
-                                <th># (last 500 games)</th>
-                            </tr>
+                                <tr>
+                                    <th>Player</th>
+                                    <th># (last 500 games)</th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -157,10 +183,10 @@
 
     <!-- Menu Toggle Script -->
     <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
     </script>
     <script src="js/kewlrouter.js"></script>
     <script src="js/app.js"></script>

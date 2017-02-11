@@ -29,13 +29,25 @@ function parse_handler(handler){
     return parsed_handler;
 }
 
-function KewlRouter(handler){
-    this.root = '/';
+function get_relative_path(path_arr, root_arr){
+    if(path_arr.length < root_arr.length){
+        return null;
+    }
+    for(var idx = 0; idx < root_arr.length - 1; idx++){
+        if(path_arr[idx] != root_arr[idx])
+            return null;
+    }
+    return path_arr.slice(root_arr.length-1, path_arr.length);
+}
+
+function KewlRouter(handler, root){
+    this.root = root || '/';
+    this.root_arr = parse_url(root);
     this.handler = parse_handler(handler);
     this.render = function(){
         var pathname = window.location.pathname;
         var cur_handler = this.handler;
-        var url_arr = parse_url(pathname, false);
+        var url_arr = get_relative_path(parse_url(pathname, false), this.root_arr);
         for(var i = 0; i < url_arr.length; i++){
             var found = false;
             for(var key in cur_handler){
@@ -53,16 +65,17 @@ function KewlRouter(handler){
         }else
             return false;
     }
+    this._navigate = function(path){
+        history.pushState(null, null, this.root + path);
+        this.render();
+    }
     this.navigate = function(e){
         var target = e.target.attributes["href"].value;
-        console.log(this.root+target);
-        history.pushState(null, null, this.root + target);
-        this.render();
         e.preventDefault();
-        return false;
+        this._navigate(target);
     }
 }
 
-function initialize_router(handler){
-    router = new KewlRouter(handler);
+function initialize_router(handler, root){
+    router = new KewlRouter(handler, root);
 }
