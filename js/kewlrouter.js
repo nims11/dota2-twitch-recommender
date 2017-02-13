@@ -47,6 +47,7 @@ function KewlRouter(handler, root){
     this.cur_path = function(){
         return get_relative_path(parse_url(window.location.pathname, false), this.root_arr);
     }
+
     this.render = function(){
         var cur_handler = this.handler;
         var url_arr = this.cur_path();
@@ -70,9 +71,11 @@ function KewlRouter(handler, root){
         }else
             return false;
     }
+
     this._navigate = function(path){
         history.pushState(null, null, this.root + path);
     }
+
     this.navigate = function(e){
         var target = e.target.attributes["href"].value;
         e.preventDefault();
