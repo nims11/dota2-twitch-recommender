@@ -50,7 +50,8 @@ function get_player_name(pid){
         dataType: 'json',
         async: false,
         success: function(data) {
-            name = data['profile']['personaname']
+            if(data['profile'])
+                name = data['profile']['personaname']
         }
     });
     return name;
@@ -151,6 +152,8 @@ function populate_populars(){
 
 function hide_all(){
     $('.container-fluid>.row').addClass("hidden");
+    $('#error-user-data').addClass("hidden");
+    $('#recommend button').removeClass("btn-info").addClass("btn-primary").text("Recommend!")
 }
 function render_players(){
     hide_all();
@@ -198,10 +201,17 @@ function render_player(url_arr){
 }
 
 function render_recommend_pid(url_arr){
+    var pid = url_arr[url_arr.length-2];
+
     $('#recommend button').removeClass("btn-primary").addClass("btn-info").text("Fetching data and computing...")
     $('#reco-result-table tbody').remove();
+    var name = get_player_name(pid);
+    if(!name){
+        $('#error-user-data').removeClass("hidden");
+        $('#recommend button').removeClass("btn-info").addClass("btn-primary").text("Recommend!")
+        return false;
+    }
 
-    var pid = url_arr[url_arr.length-2];
     var vector = get_hero_vector(pid);
     var results = kneighbors(vector, 15);
     var rows = []
@@ -219,7 +229,8 @@ function render_recommend_pid(url_arr){
     }
 
     $('#reco-result-table').append('<tbody>'+rows.join("")+'</tbody>');
-    $('#reco-result .name').text(get_player_name(pid));
+
+    $('#reco-result .name').text(name);
     hide_all();
     $('#reco-result').removeClass("hidden");
     $('#recommend button').removeClass("btn-info").addClass("btn-primary").text("Recommend!")
