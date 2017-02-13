@@ -72,7 +72,6 @@ function KewlRouter(handler, root){
     }
     this._navigate = function(path){
         history.pushState(null, null, this.root + path);
-        this.render();
     }
     this.navigate = function(e){
         var target = e.target.attributes["href"].value;
