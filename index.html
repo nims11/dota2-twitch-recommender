@@ -84,13 +84,19 @@
                 <div class="row hidden" id="recommend">
                     <div class="col-lg-12">
                         <h2>Dota 2 Twitch Recommender</h2>
+                        <div class="alert alert-info">
+                            <ul>
+                                <li>Enter your info and the system will try finding players with a twitch channel having similar hero pool as yours</li>
+                                <li>Don't enter your steam/dota username since this is a simple backend-less (opendota CORS ftw!) system and dealing with a backend just for using the steam api is not cool</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="row" style="margin-top: 200px">
                         <div class="col-lg-3">
                         </div>
                         <div class="col-lg-6">
                             <input type="text" style="text-align:center" id="input-reco"
-                            class="form-control" placeholder="Enter Dota2 id or Dotabuff profile url...">
+                            class="form-control" placeholder="Enter Dota2 id (eg. 86745912) or Dotabuff profile url...">
                             <button id="recommend-btn" style="width:100%" class="btn btn-primary">Recommend!</button>
                         </div>
                         <div class="col-lg-3">
