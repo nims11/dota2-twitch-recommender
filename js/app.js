@@ -15,28 +15,43 @@ function clean_vector(vec){
     return vec;
 }
 
+function get_recency_weight(idx, N, p){
+    return (p-1) * (N-idx) / N + 1;
+}
+
+function populate_player_vector(history, weight_recency){
+    weight_recency = weight_recency || 1;
+    var vector = new Array(data['heroes'].length);
+    for(var i = 0; i < vector.length; i++)
+        vector[i] = 0;
+    for(var i = 0; i < history.length; i++){
+        if(history[i])
+            vector[history[i]] += get_recency_weight(i, history.length, weight_recency);
+    }
+    return vector;
+}
+
 function populate_player_space(){
     var players = data['players'];
     var players_obj = {};
     for(var i = 0; i < players.length; i++){
-        players[i].vector_norm = norm_vector(players[i].vector);
+        players[i].vector = populate_player_vector(players[i].history);
+        players[i].vector_norm = norm_vector(populate_player_vector(players[i].history, 2));
         players_obj[players[i].id] = players[i];
     }
     data['players'] = players_obj;
     console.log("populated player space");
 }
 
-function get_hero_vector(player_id){
+function get_hero_history(player_id){
     var vector = new Array();
-    for(var i = 0; i < data['heroes'].length; i++)
-        vector[i] = 0.0;
     $.ajax({
         url: 'http://api.opendota.com/api/players/'+player_id+'/matches?limit=500',
         dataType: 'json',
         async: false,
         success: function(data) {
             for(var i = 0; i < data.length; i++){
-                vector[data[i]['hero_id']] += 1;
+                vector.push(data[i]['hero_id']);
             }
         }
     });
@@ -67,7 +82,6 @@ function debug_player(vector){
 
 function kneighbors(vector, k){
     k = k || 10;
-    vector = norm_vector(vector);
     var scores = [];
     for(var pid in data['players']){
         scores.push([
@@ -212,15 +226,15 @@ function render_recommend_pid(url_arr){
         return false;
     }
 
-    var vector = get_hero_vector(pid);
+    var history = get_hero_history(pid);
+    var vector = norm_vector(populate_player_vector(history, 2));
     var results = kneighbors(vector, 15);
     var rows = []
     for(var idx in results){
         var pid_2 = results[idx][0];
         var cnt = results[idx][1];
-        var summary = data['players'][pid_2].vector
+        var summary = data['players'][pid_2].vector_norm
             .map(function(x, idx){return [idx, x*vector[idx]];})
-            .filter(function(x){return data['players'][pid_2].vector[x[0]] >= 5 && vector[x[0]] >= 5;})
             .sort(function(x, y){return y[1] - x[1];})
             .slice(0, 5)
             .map(function(x){return linkify_hero(x[0]) + " (x"+data['players'][pid_2].vector[x[0]]+")";})
@@ -245,7 +259,9 @@ var routes = {
     '/recommend': render_recommend,
     '/recommend/.*': render_recommend_pid
 }
+
 var root = '/dota2-twitch-recommender/';
+
 $.ajax({
     url: root + 'data.json',
     dataType: 'json',
@@ -258,6 +274,8 @@ $.ajax({
     }
 });
 
+
+// UI bindings
 $('#recommend-btn').click(function(){
     var pid = $('#input-reco').val().split('/').filter(function(x){return x.length > 0;});
     pid = pid[pid.length-1];
