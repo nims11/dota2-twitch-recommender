@@ -273,6 +273,7 @@ var routes = {
 
 var root = '/dota2-twitch-recommender/';
 
+$('#loading').removeClass("hidden");
 $.ajax({
     url: root + 'data.json',
     dataType: 'json',
