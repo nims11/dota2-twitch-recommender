@@ -227,6 +227,12 @@ function render_recommend_pid(url_arr){
     }
 
     var history = get_hero_history(pid);
+    if(!history || history.length == 0){
+        $('#error-user-data').removeClass("hidden");
+        $('#recommend button').removeClass("btn-info").addClass("btn-primary").text("Recommend!")
+        return false;
+    }
+
     var vector = norm_vector(populate_player_vector(history, 2));
     var results = kneighbors(vector, 15);
     var rows = []
