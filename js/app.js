@@ -166,6 +166,7 @@ function populate_populars(){
 
 function hide_all(){
     $('.container-fluid>.row').addClass("hidden");
+    $('#loading').addClass("hidden");
     $('#error-user-data').addClass("hidden");
     $('#recommend button').removeClass("btn-info").addClass("btn-primary").text("Recommend!")
 }
@@ -219,8 +220,11 @@ function render_recommend_pid(url_arr){
 
     $('#recommend button').removeClass("btn-primary").addClass("btn-info").text("Fetching data and computing...")
     $('#reco-result-table tbody').remove();
+    $('#loading').removeClass("hidden");
+
     var name = get_player_name(pid);
     if(!name){
+        $('#loading').addClass("hidden");
         $('#error-user-data').removeClass("hidden");
         $('#recommend button').removeClass("btn-info").addClass("btn-primary").text("Recommend!")
         return false;
@@ -228,6 +232,7 @@ function render_recommend_pid(url_arr){
 
     var history = get_hero_history(pid);
     if(!history || history.length == 0){
+        $('#loading').addClass("hidden");
         $('#error-user-data').removeClass("hidden");
         $('#recommend button').removeClass("btn-info").addClass("btn-primary").text("Recommend!")
         return false;
