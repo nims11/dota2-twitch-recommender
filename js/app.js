@@ -46,7 +46,7 @@ function populate_player_space(){
 function get_hero_history(player_id){
     var vector = new Array();
     $.ajax({
-        url: 'http://api.opendota.com/api/players/'+player_id+'/matches?limit=500',
+        url: 'https://api.opendota.com/api/players/'+player_id+'/matches?limit=500',
         dataType: 'json',
         async: false,
         success: function(data) {
@@ -61,7 +61,7 @@ function get_hero_history(player_id){
 function get_player_name(pid){
     var name = null;
     $.ajax({
-        url: 'http://api.opendota.com/api/players/'+pid,
+        url: 'https://api.opendota.com/api/players/'+pid,
         dataType: 'json',
         async: false,
         success: function(data) {
