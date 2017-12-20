@@ -19,7 +19,7 @@ def populate_heroes():
 
 def get_hero_vector(id, dim):
     logging.info("constructing hero vector for player: " + str(id))
-    match_history = requests.get('http://api.opendota.com/api/players/%s/matches' % str(id), params={'limit': 500}).json()
+    match_history = requests.get('http://api.opendota.com/api/players/%s/matches' % str(id), params={'limit': 100}).json()
     vector = []
     for x in match_history:
         vector.append(x['hero_id'])
