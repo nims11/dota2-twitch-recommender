@@ -248,6 +248,7 @@ function render_recommend_pid(url_arr){
             .map(function(x, idx){return [idx, x*vector[idx]];})
             .sort(function(x, y){return y[1] - x[1];})
             .slice(0, 5)
+            .filter(function(x){return data['players'][pid_2].vector[x[0]] > 0;})
             .map(function(x){return linkify_hero(x[0]) + " (x"+data['players'][pid_2].vector[x[0]]+")";})
             .join(", ");
         rows.push('<tr><td>'+linkify_player(pid_2)+'</td><td>'+linkify_twitch(pid_2)+'</td><td>'+summary+'</td></tr>');
