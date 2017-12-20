@@ -1,15 +1,16 @@
 var data = null;
 var hero_to_player_popular = null;
 var player_to_hero_popular = null;
-function norm_vector(vec){
-    vec = clean_vector(vec);
+function norm_vector(vec, threshold){
+    threshold = threshold || 5;
+    vec = clean_vector(vec, threshold);
     var norm = Math.sqrt(vec.map(function(x){return x*x}).reduce(function(a, b){return a+b}, 0));
     return vec.map(function(x){return x / norm});
 }
 
-function clean_vector(vec){
+function clean_vector(vec, threshold){
     for(var idx in vec){
-        if(vec[idx] < 5)
+        if(vec[idx] < threshold)
             vec[idx] = 0;
     }
     return vec;
@@ -46,7 +47,7 @@ function populate_player_space(){
 function get_hero_history(player_id){
     var vector = new Array();
     $.ajax({
-        url: 'https://api.opendota.com/api/players/'+player_id+'/matches?limit=100',
+        url: 'https://api.opendota.com/api/players/'+player_id+'/matches?limit=250',
         dataType: 'json',
         async: false,
         success: function(data) {
@@ -238,12 +239,15 @@ function render_recommend_pid(url_arr){
         return false;
     }
 
-    var vector = norm_vector(populate_player_vector(history, 2));
+    var vector = norm_vector(populate_player_vector(history, 2), 3);
     var results = kneighbors(vector, 15);
-    var rows = []
+    var rows = [];
     for(var idx in results){
         var pid_2 = results[idx][0];
         var cnt = results[idx][1];
+    console.log(data['players'][pid_2].vector_norm
+            .map(function(x, idx){return [idx, x*vector[idx]];})
+            .sort(function(x, y){return y[1] - x[1];}))
         var summary = data['players'][pid_2].vector_norm
             .map(function(x, idx){return [idx, x*vector[idx]];})
             .sort(function(x, y){return y[1] - x[1];})
